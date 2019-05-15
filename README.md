@@ -125,3 +125,46 @@ Cada guía es posible rastrearla, por eso se debe almacenar los diferentes estad
 * _Mi recomendación personal_ es que cuando las tablas queden con 2 columnas o 1 columna sin contar la clave primaria, es posible desnormalizar siempre y cuando en la tabla que vaya a contener esa columna, tenga una restricción de tipo CHECK que solo acepte los valores requeridos https://www.techonthenet.com/oracle/check.php
 * No olvidar las buenas prácticas para el nombramiento de las cosas, tablas en plural, todas las tablas con una columna ID de tipo entero. Claves foráneas bien nombradas, entre otros.
 * Si la tabla se llama "CLIENTES", no es necesario que las columnas tengan algún sufijo que relacione la tabla, tales como: teléfono_cliente, nombre_cliente, apellido_cliente. Ya se asume que estos campos son de un cliente en específico. Si la columna no coincide con lo referido en la tabla, es probable que se encuentre en la tabla incorrecta o el modelo se encuentre mal normalizado.
+
+
+### Trabajo grupal 2
+| Asignatura        | Valor           | Fecha  |
+| ------------- |:-------------:| -----:|
+| Adminitración de base de datos avanzada      | 20% |  **Junio/2/2019 12:00 (Mediodía)** |
+
+El propósito de esta entrega es practica la creación de las vistas, funciones, procedimientos almacenados, manipulación de datos y crear un modelo de base de datos no relacional con una base de datos documental; utilizando el modelo entidad relación de la pasada práctica.
+
+**Importante:**
+1. Crear una carpeta llamada **Assignment 2** y dentro de ella colocar todo lo requerido para la entrega del trabajo.
+2. El repositorio deberá tener:
+   - Archivo con extensión .sql el cual tendrá toda la lógica.
+   - Video exponiendo el (Más detalles abajo)
+   - Diagrama entidad relación en extensión .pdf o .jpg .png si ha tenido cambios con respecto a la entrega pasada.
+3. Cada integrante **deberá tener al menos un commit** resolviendo diferentes partes del taller. En caso de que alguno de los integrantes no lo tenga, se rebajarán **2 unidades** sobre la nota definitiva del taller de dicho integrante.
+---
+### To do
+
+(Realizar las correcciones pertinentes en caso de que hubiere lugar al modelo entidad relación presentado en el trabajo anterior. Hay cosas opciones y hay cosas obligatorias, en caso de no seguir las recomendaciones es probable que tengan dificultad para construir los queries necesarios para extraer los datos.)
+1. Crear datos para la solución de problemas, para esto pueden utilizar [mockaroo.com](https://mockaroo.com/), lo mínimo requerido es:
+   * 50 empleados
+   * 100 clientes
+   * 10 vehículos
+   * Los centros de recibo reales de Coordinadora https://www.coordinadora.com/centros-de-recibo/
+   * Los planes de mantenimiento expuestos en el problema pasado.
+   * 500 envíos o guías entre diferentes ciudades y en diferentes estados (La mayoría que estén en estado "pendiente" o "por enviar")
+2. Crear una vista llamada "plan_mantenimiento_detallado" el cuál deberá mostrar que cosas se realizan en ese plan de mantenimiento. La idea es invocarlo de esta manera "select * from plan_mantenimiento_detallado where kilometraje = 5000" (Ya usted decide si quiere crear una columna numérica o si quiere manejarlo usando LIKE en el campo del nombre del mantenimiento)
+
+
+| Kilometraje   | Item          |
+| ------------- |-------------| 
+| 5000          | Cambio aceite |
+| 5000          | Cambio filtro aceite |
+| 5000          | Cambio filtro aire |
+| 5000          | Aire llantas |
+| 5000          | Nivel deterioro banda rodamiento |
+| 5000          | Tensión embrage |
+| 5000          | Tensión freno |
+| 5000          | Tensión correa motor |
+| 5000          | Verificación luces |
+| 5000          | Verificación comandos tablero |
+| 5000          | Verificación niveles líquido freno |
