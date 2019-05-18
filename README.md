@@ -168,3 +168,42 @@ El propósito de esta entrega es practica la creación de las vistas, funciones,
 | 5000          | Verificación luces |
 | 5000          | Verificación comandos tablero |
 | 5000          | Verificación niveles líquido freno |
+
+3. Crear un procedimiento almacenado llamado "Programar_mantenimiento" el cuál debe recibir el id de un vehículo. El procedimiento deberá calcular cuántos kilómetros faltan para el próximo mantenimiento, si faltan menos de 200 kilómetros deberá programar el mantenimiento con fecha prevista de mantenimiento 2 dias después de la fecha en la cual se invoque el procedimiento el mantenimiento y debera tener sus respectivos items con estado pendiente. El procedimiento deberá tener una excepción si el id que se pase como parámetro es negativo o igual a cero. El mantenimiento debe hacerse en el centro de recibo que está asignado para ese vehículo y deberá asignar un mecánico del mismo lugar.
+Ejemplo: Un vehículo tiene 14900 km y se invoca el procedimiento, deberá crear y programar el siguiente mantenimiento que es de 15.000km con todos sus items en estado pendiente.
+4. Crear un trigger sobre la tabla de los vehículos, cuando cambie el kilometraje de vehículo deberá invocar el procedimiento "Programar_mantenimiento"
+5. La junta directiva desea realizar un cotizador de precios de los envíos, para esto es necesario crear una matriz de precios similar a la que se maneja en la [realidad](http://www.coordinadora.com/docs/coordinadora_tarifas_contado_2014_2015.pdf) (Ver sección Tarifas de mensajería y paquetes hasta 5 kilos). Para esto se decide crear una nueva tabla que tendrá las siguientes columnas: centro_recib_id (Clave foránea con la tabla de centros de recibo), destino_id (Clave foránea a la tabla códigos postales o ciudades), precio_kilo (decimal).
+
+Para llenar esta tabla usted creará una procedimiento llamado "recalcular_tarifas", este procedimiento lo que hará es los siguiente:
+- Borrar todos los datos de la tabla donde se guardan los precios.
+- Leer todos los centros de recibo y empezar a recorrerlos uno a uno.
+- Por cada centro de recibo deberá leer todas las ciudades o códigos postales.
+- Deberá generar un decimal aleatorio entre 400 y 1500 
+- Luego insertará en la tabla el id del centro de recibo, el id de la ciudad o del código postal y el valor generado.
+6. Crear una vista la cual traiga todos los precios por kilo de todas las ciudades destino y como ciudad origen recibirá un string "Barranquilla, Medellín, Cali". Es importante recordar que la liquidación de precios solo se hizo teniendo como base las ciudades de cada centro de recibo. Ejemplo SELECT * FROM PRECIOS WHERE ORIGEN = 'BARRANQUILLA'. (Observe que no se está pasando el id del centro de recibo, se está pasando la ciudad a la que pertenece el centro de recibo, por ende hay que hacer los JOINS correspondientes para obtener el listado de precios.
+
+Origen | Destino   | Nombre Destino  | Precio |
+-------| --------- |-----------------|--------| 
+BARRANQUILLA | 234       | Acacías | 300 |
+BARRANQUILLA | 235       | Armenia | 500 |
+BARRANQUILLA | 236       | Marinilla | 1200 |
+7. Crear un procedimiento llamado "calcular_peso_volumetrico", dicho procedimiento deberá leer todos los registros de la tabla de envíos y llenar el campo "peso volumen", para esto aplicará la fórmula expuesta en el taller anterior: se obtiene multiplicando el ancho x el alto x el largo y luego se multiplica por 400 que es el factor de equivalencia por cada metro cúbico)
+8. Crear una función que retornará un decimal, dicha función recibirá las siguientes variables: peso_real, peso_volumen, centro_recibo_origen, ciudad_destino. Dicha función deberá comparar el valor mayor entre peso_real y peso_volumen, con ese valor deberá buscar el precio por kilo de la ciudad hacia donde se dirige el paquete. Para esto invocará la vista del punto anterior y el precio deberá multiplicarlo por la cantidad del peso del paquete. Validar con excepciones que los pesos sean mayores a 0 y los centros de recibo y la ciudad destino no estén en blanco.
+9. Crear un procedimiento llamado "calcular_fletes", el cual seleccionará aquellos envíos donde el campo "valor del servicio" esté 0 o nullo. Con cada uno de ellos deberá invocar la función creada en el punto anterior y con el valor retornado, deberá llenar el campo "valor del servicio".
+10. Usted escribirá una función llamada CALCULAR_CAJAS_NECESARIAS que determine si un número de items pueden ser despachados y el número de cajas necesarias para empacar los items. Hay 2 tamaños de cajas: grandes que pueden almacenar hasta 5 artículos y pequeñas que pueden almacenar solamente 1 item.
+Un pedido no se puede despachar cuando se cumpla una de dos condiciones, que no alcancen las cajas para almacenar los items o que una caja grande no tenga su aforo completo, es decir, si tengo 4 items y solamente 1 caja grande, no podría despacharla porque la caja no está llena en su totalidad.
+Usted deberá crear una función que reciba 3 parámetros en el siguiente orden: número de items, cantidad de cajas grandes disponibles y cantidad de cajas pequeñas disponibles. La función retornará un número, si el pedido no se puede despachar, deberá retornar -1, de lo contrario, deberá retornar el número de cajas grandes y pequeñas utilizadas para el despacho.
+Ejemplos:
+Items: 16
+Cajas Grandes: 5
+Cajas Pequeñas: 10
+En este caso deberá retornar 4, ya que son 3 cajas grandes (5*3 = 15) y 1 pequeña.
+Items: 14
+Cajas grandes: 10
+Cajas pequeñas: 1
+En este caso deberá retornar -1, ya que no hay el número de cajas pequeñas suficientes para empacar los 4 artículos restantes.
+Nota: Siempre las cajas grandes tienen prioridad sobre las pequeñas. Es decir si tengo 6 items y 1 caja grande y 10 pequeñas, debo utilizar 2 cajas.
+
+11. Crear un backup y adjuntar una imagen donde se evidencie el resultado del backup usando RMAN.
+12. Leer el siguiente artículo [Netflix: What Happens When You Press Play?](http://highscalability.com/blog/2017/12/11/netflix-what-happens-when-you-press-play.html), tener presente cómo funciona Netflix y hacer énfasis especialmente en la parte de bases de datos, qué bases de datos usan? Cómo las usan? Qué hay de importante con el manejo de bases de datos?
+13. Hacer un video en el cual se comparta la pantalla y se explique punto por punto lo que hicieron para resolver cada problema, ejecutarlos y hacer demostración de cada función, procedimiento y demás. En el punto del artículo simplemente deben hablar sobre el mismo teniendo en cuenta las preguntas planteadas. Todos los integrantes del equipo deberán hablar, NO USAR licencias de prueba o versiones "trial" ya que es ilegal, tener en cuenta la calidad del sonido y de video al momento de hacer el video, todos estos factores son tenidos en cuenta durante la calificación de mismo. 
